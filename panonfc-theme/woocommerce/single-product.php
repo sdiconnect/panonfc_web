@@ -3,12 +3,14 @@
  * Bespoke single product template (PANONFC).
  *
  * Overrides WooCommerce's single-product.php. WooCommerce remains the checkout
- * funnel: the native add-to-cart form is rendered inside the "Commander" block
- * so variable products + the quantity-discount extension keep working. The
- * pill configurator above it is the approved design and acts as a live price
- * ESTIMATOR — its coefficients are design assumptions (see configurator.js and
- * the handoff). Wire it to real variations by feeding window PANONFC_CFG from
- * the product's variation prices when those are confirmed.
+ * funnel. The approved pill configurator is a progressive enhancement of the
+ * NATIVE variations form: configurator.js turns the real variation selects
+ * into pills and reads each variation's REAL price from WooCommerce's
+ * `found_variation` event — no hardcoded prices, it adapts to whatever
+ * attributes the product defines (dimensions, technologie, œillets, …). The
+ * quantity stepper drives the real qty input and the real add-to-cart button
+ * handles purchasing, so the final price + degressive discounts are computed
+ * by WooCommerce at cart. The synthesis card shows a live estimate.
  *
  * @package panonfc
  */
@@ -106,83 +108,33 @@ while ( have_posts() ) :
 						</div>
 					<?php endif; ?>
 
-					<?php /* ---- Design configurator (live estimator) ---- */ ?>
+					<?php
+					/*
+					 * Live configurator driven by the REAL WooCommerce variations.
+					 * The native variations form is rendered here; configurator.js
+					 * turns its selects into design pills, reads each variation's
+					 * real price on `found_variation`, and fills the synthesis card.
+					 * The quantity stepper + synthesis card are injected into the
+					 * native form via hooks (see inc/woocommerce.php) so the real
+					 * add-to-cart keeps working and prices stay accurate.
+					 */
+					$panonfc_variable = $product && $product->is_type( 'variable' );
+					if ( $panonfc_variable ) {
+						add_action( 'woocommerce_after_variations_table', 'panonfc_render_cfg_qty', 10 );
+						add_action( 'woocommerce_after_variations_table', 'panonfc_render_cfg_synth', 20 );
+					}
+					?>
 					<div class="configurator" data-configurator>
-						<div class="cfg-field">
-							<div class="cfg-field__label">Dimensions</div>
-							<div class="cfg-options">
-								<button type="button" class="cfg-opt" data-group="dim" data-opt="4060">40 × 60 cm</button>
-								<button type="button" class="cfg-opt" data-group="dim" data-opt="6080">60 × 80 cm</button>
-								<button type="button" class="cfg-opt" data-group="dim" data-opt="80120">80 × 120 cm</button>
-							</div>
-						</div>
-						<div class="cfg-field">
-							<div class="cfg-field__label">Technologie</div>
-							<div class="cfg-options">
-								<button type="button" class="cfg-opt" data-group="tech" data-opt="qr">QR code seul</button>
-								<button type="button" class="cfg-opt" data-group="tech" data-opt="nfc">NFC seul</button>
-								<button type="button" class="cfg-opt" data-group="tech" data-opt="both">QR code + NFC</button>
-							</div>
-						</div>
-						<div class="cfg-row">
-							<div class="cfg-field">
-								<div class="cfg-field__label">Impression</div>
-								<div class="cfg-options">
-									<button type="button" class="cfg-opt" data-group="print" data-opt="recto">Recto</button>
-									<button type="button" class="cfg-opt" data-group="print" data-opt="duplex">Recto-verso</button>
-								</div>
-							</div>
-							<div class="cfg-field">
-								<div class="cfg-field__label">Œillets</div>
-								<div class="cfg-options">
-									<button type="button" class="cfg-opt" data-group="eyelets" data-opt="yes">4 œillets</button>
-									<button type="button" class="cfg-opt" data-group="eyelets" data-opt="no">Sans</button>
-								</div>
-							</div>
-						</div>
-						<div class="cfg-field">
-							<div class="cfg-field__label">Quantité</div>
-							<div class="cfg-qty">
-								<div class="cfg-stepper">
-									<button type="button" data-qty="dec" aria-label="Diminuer la quantité">−</button>
-									<div class="val" data-out="qty">10</div>
-									<button type="button" data-qty="inc" aria-label="Augmenter la quantité">+</button>
-								</div>
-								<div class="cfg-shortcuts">
-									<button type="button" data-qty="10">10</button>
-									<button type="button" data-qty="25">25</button>
-									<button type="button" data-qty="50">50</button>
-									<button type="button" data-qty="100">100</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="synth">
-							<div class="synth__top">
-								<div>
-									<div class="synth__label">Prix unitaire HT (estimation)</div>
-									<div class="synth__unit">
-										<span class="synth__price" data-out="unit">—</span>
-										<span class="synth__discount" data-out="discount"></span>
-									</div>
-								</div>
-								<div class="synth__total">
-									<div class="synth__label">Total HT estimé</div>
-									<div class="v" data-out="total">—</div>
-								</div>
-							</div>
-							<div class="synth__summary" data-out="summary"></div>
-
-							<?php /* Native WooCommerce add-to-cart: the real purchase path. */ ?>
-							<div class="pdp__cart">
-								<?php woocommerce_template_single_add_to_cart(); ?>
-							</div>
-
-							<div class="synth__actions">
-								<a class="btn btn--secondary" href="<?php echo esc_url( panonfc_url( 'devis' ) ); ?>">Devis volume</a>
-							</div>
-							<div class="synth__note">Estimation indicative basée sur le format 40 × 60 recto ; le prix ferme et les remises par quantité sont calculés au panier. Les éléments graphiques (logo, charte, visuel existant) sont à transmettre après la commande — BAT sous 48 h.</div>
-						</div>
+						<?php woocommerce_template_single_add_to_cart(); ?>
+					</div>
+					<?php
+					if ( $panonfc_variable ) {
+						remove_action( 'woocommerce_after_variations_table', 'panonfc_render_cfg_qty', 10 );
+						remove_action( 'woocommerce_after_variations_table', 'panonfc_render_cfg_synth', 20 );
+					}
+					?>
+					<div class="synth__actions">
+						<a class="btn btn--secondary" href="<?php echo esc_url( panonfc_url( 'devis' ) ); ?>">Devis volume</a>
 					</div>
 				</div>
 			</div>

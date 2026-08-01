@@ -54,6 +54,56 @@ add_filter( 'loop_shop_per_page', function () { return 12; } );
  */
 
 /**
+ * Configurator — quantity stepper injected into the native variations form.
+ * Controls the real WooCommerce `.qty` input via configurator.js.
+ */
+function panonfc_render_cfg_qty() {
+	?>
+	<div class="cfg-field cfg-field--qty">
+		<div class="cfg-field__label"><?php esc_html_e( 'Quantité', 'panonfc' ); ?></div>
+		<div class="cfg-qty">
+			<div class="cfg-stepper">
+				<button type="button" data-qty="dec" aria-label="<?php esc_attr_e( 'Diminuer la quantité', 'panonfc' ); ?>">−</button>
+				<div class="val" data-out="qty">1</div>
+				<button type="button" data-qty="inc" aria-label="<?php esc_attr_e( 'Augmenter la quantité', 'panonfc' ); ?>">+</button>
+			</div>
+			<div class="cfg-shortcuts">
+				<button type="button" data-qty="10">10</button>
+				<button type="button" data-qty="25">25</button>
+				<button type="button" data-qty="50">50</button>
+				<button type="button" data-qty="100">100</button>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * Configurator — synthesis card injected into the native variations form.
+ * Values are filled from real variation prices by configurator.js.
+ */
+function panonfc_render_cfg_synth() {
+	?>
+	<div class="synth" data-synth>
+		<div class="synth__top">
+			<div>
+				<div class="synth__label"><?php esc_html_e( 'Prix unitaire estimé', 'panonfc' ); ?></div>
+				<div class="synth__unit">
+					<span class="synth__price" data-out="unit">—</span>
+					<span class="synth__discount" data-out="discount"></span>
+				</div>
+			</div>
+			<div class="synth__total">
+				<div class="synth__label"><?php esc_html_e( 'Total estimé', 'panonfc' ); ?></div>
+				<div class="v" data-out="total">—</div>
+			</div>
+		</div>
+		<div class="synth__note"><?php esc_html_e( 'Prix issus de vos variations WooCommerce ; le prix ferme et les remises par quantité sont recalculés au panier. Éléments graphiques à transmettre après la commande — BAT sous 48 h.', 'panonfc' ); ?></div>
+	</div>
+	<?php
+}
+
+/**
  * Helper: does the current single product template want our bespoke layout?
  * The client can opt a product out with the `_panonfc_default_layout` meta.
  */

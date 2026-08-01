@@ -42,14 +42,31 @@ function panonfc_enqueue_assets() {
 		true
 	);
 
-	// Product configurator estimator (single product only).
+	// Product configurator (single product only). Enhances the native
+	// WooCommerce variations form, so it depends on jQuery and WooCommerce's
+	// add-to-cart-variation script (which fires the found_variation event).
 	if ( function_exists( 'is_product' ) && is_product() ) {
 		wp_enqueue_script(
 			'panonfc-configurator',
 			PANONFC_URI . '/assets/js/configurator.js',
-			array(),
+			array( 'jquery', 'wc-add-to-cart-variation' ),
 			PANONFC_VERSION,
 			true
+		);
+		wp_localize_script(
+			'panonfc-configurator',
+			'PANONFC_CFG',
+			array(
+				'tiers'       => array_values( panonfc_discount_tiers() ),
+				'currencySym' => function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '€',
+				'i18n'        => array(
+					'unit'     => __( 'Prix unitaire estimé', 'panonfc' ),
+					'total'    => __( 'Total estimé', 'panonfc' ),
+					'applied'  => __( 'appliqués', 'panonfc' ),
+					'select'   => __( 'Sélectionnez vos options pour voir le prix.', 'panonfc' ),
+					'unavail'  => __( 'Cette combinaison n\'est pas disponible.', 'panonfc' ),
+				),
+			)
 		);
 	}
 

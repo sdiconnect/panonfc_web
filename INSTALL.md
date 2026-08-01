@@ -45,11 +45,19 @@ du thème (voir §5, pourquoi ça évite « le dossier existe déjà »).
    Tant qu'aucun menu n'est assigné, un menu par défaut correct s'affiche.
 4. **Logo** : Personnaliser → Identité du site → Logo (sinon le logo SVG fourni
    est utilisé).
-5. **WooCommerce** : rien à faire, le tunnel d'achat reste WooCommerce. La fiche
-   produit `panneau-plat-connecte` prend automatiquement la mise en page
-   sur-mesure (configurateur + tableau dégressif). Pour revenir à la mise en
-   page WooCommerce standard sur un produit précis, ajoutez-lui le champ
-   personnalisé `_panonfc_default_layout = yes`.
+5. **WooCommerce** : rien à faire, le tunnel d'achat reste WooCommerce. Les
+   fiches produit **variables** prennent automatiquement la mise en page
+   sur-mesure. Le configurateur à pastilles est généré **à partir de vos
+   vraies variations** : chaque combinaison affiche le **prix réel** de la
+   variation (lu depuis WooCommerce), et le bouton « Ajouter au panier » natif
+   reste la source de vérité — le prix ferme et les remises dégressives sont
+   calculés au panier. Aucun tarif n'est codé en dur : le configurateur
+   s'adapte tout seul à vos attributs (dimensions, technologie, œillets…).
+   - Les paliers de remise affichés dans la **carte d'estimation** sont
+     paramétrables via le filtre `panonfc_discount_tiers` (par défaut : ceux du
+     site actuel). Ils ne servent qu'à l'estimation ; le panier fait foi.
+   - Pour revenir à la mise en page WooCommerce standard sur un produit précis,
+     ajoutez-lui le champ personnalisé `_panonfc_default_layout = yes`.
 
 ---
 

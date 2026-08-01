@@ -194,6 +194,29 @@ function panonfc_url( $role ) {
 }
 
 /**
+ * Numeric quantity-discount tiers used by the front-end estimator.
+ * Fractions match the current site's degressive pricing (real data). The
+ * final price and discount are always recomputed by WooCommerce at cart —
+ * this only powers the live estimate. Filterable so it can be aligned with
+ * the exact extension rules per product.
+ *
+ * @return array List of array( 'min' => int, 'd' => float, 'label' => string ).
+ */
+function panonfc_discount_tiers() {
+	return apply_filters(
+		'panonfc_discount_tiers',
+		array(
+			array( 'min' => 100, 'd' => 0.4098, 'label' => '−41 %' ),
+			array( 'min' => 50,  'd' => 0.3607, 'label' => '−36 %' ),
+			array( 'min' => 25,  'd' => 0.3115, 'label' => '−31 %' ),
+			array( 'min' => 10,  'd' => 0.2213, 'label' => '−22 %' ),
+			array( 'min' => 5,   'd' => 0.1311, 'label' => '−13 %' ),
+			array( 'min' => 1,   'd' => 0,      'label' => '' ),
+		)
+	);
+}
+
+/**
  * Shared descending price table rows (single source of truth).
  *
  * @return array
