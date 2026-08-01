@@ -1,0 +1,9 @@
+# Build output
+/dist/
+*.zip
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.map
+node_modules/
