@@ -807,6 +807,37 @@ body.mobile-nav-open { overflow: hidden; }
    ============================================================ */
 .woocommerce-page-inner { min-width: 0; }
 
+/* --- WooCommerce buttons: override the default purple everywhere --------- */
+/* Secondary buttons (loop, "Voir le panier", "Mettre à jour"…) → navy */
+.woocommerce a.button, .woocommerce button.button, .woocommerce input.button,
+.woocommerce #respond input#submit,
+.woocommerce-page a.button, .woocommerce-page button.button, .woocommerce-page input.button {
+	background-color: var(--pano-navy); color: var(--white);
+	border: none; border-radius: var(--radius-md);
+	font-family: var(--font-sans); font-weight: var(--fw-semibold); font-size: 15px;
+	padding: 12px 24px; line-height: 1.3; text-shadow: none; cursor: pointer;
+	transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.woocommerce a.button:hover, .woocommerce button.button:hover, .woocommerce input.button:hover,
+.woocommerce #respond input#submit:hover,
+.woocommerce-page a.button:hover, .woocommerce-page button.button:hover { background-color: var(--navy-800); color: var(--white); }
+
+/* Primary / add-to-cart / checkout (.alt) and the single add-to-cart → orange.
+   !important because payment/add-on plugins inject late button styles. */
+.woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt,
+.woocommerce #respond input#submit.alt, .woocommerce #place_order,
+.woocommerce div.product form.cart .button,
+.woocommerce .single_add_to_cart_button,
+.woocommerce-page a.button.alt, .woocommerce-page button.button.alt {
+	background-color: var(--pano-orange) !important; color: var(--white) !important;
+	border: none !important; border-radius: var(--radius-md);
+	font-weight: var(--fw-semibold);
+}
+.woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover,
+.woocommerce #place_order:hover, .woocommerce .single_add_to_cart_button:hover { background-color: var(--orange-700) !important; color: var(--white) !important; }
+
+.woocommerce .button.disabled, .woocommerce button.button:disabled, .woocommerce .single_add_to_cart_button:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* Page header (Boutique title + result count + ordering) */
 .woocommerce-products-header { margin-bottom: 28px; }
 .woocommerce-products-header__title,
