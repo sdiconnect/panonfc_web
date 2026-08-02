@@ -33,10 +33,16 @@ function &panonfc_form_state() {
 }
 
 /**
- * Recipient address for form submissions (filterable).
+ * Recipient address for form submissions (Contact + Devis).
+ *
+ * Defaults to contact@panonfc.com. Override with the PANONFC_CONTACT_EMAIL
+ * constant (wp-config.php) or the `panonfc_contact_recipient` filter.
  */
 function panonfc_contact_recipient() {
-	return apply_filters( 'panonfc_contact_recipient', get_option( 'admin_email' ) );
+	$email = ( defined( 'PANONFC_CONTACT_EMAIL' ) && PANONFC_CONTACT_EMAIL )
+		? PANONFC_CONTACT_EMAIL
+		: 'contact@panonfc.com';
+	return apply_filters( 'panonfc_contact_recipient', $email );
 }
 
 /* ============================================================
