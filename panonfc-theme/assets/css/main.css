@@ -23,8 +23,10 @@ body.panonfc {
   overflow-x: hidden;
 }
 
-.panonfc h1, .panonfc h2, .panonfc h3,
-.panonfc h4, .panonfc h5, .panonfc h6 {
+/* Base heading styles are a low-specificity fallback (:where) so component
+   classes like .hero__title / .cta__title (white on navy) keep their color
+   instead of being overridden by the default dark heading color. */
+:where(.panonfc h1, .panonfc h2, .panonfc h3, .panonfc h4, .panonfc h5, .panonfc h6) {
   font-family: var(--font-display);
   color: var(--text-strong);
   font-weight: var(--fw-extrabold);
