@@ -36,7 +36,14 @@ du thème (voir §5, pourquoi ça évite « le dossier existe déjà »).
    - Chantier → `PANONFC — Chantier`
    - Comment ça marche / La solution → `PANONFC — La solution`
    - Tarifs → `PANONFC — Tarifs`
-   - Contact / Devis → `PANONFC — Contact / Devis`
+   - **Contact** (formulaire simple) → `PANONFC — Contact`
+   - **Demander un devis** (formulaire complet) → `PANONFC — Demander un devis`
+
+   > Deux formulaires distincts : `Contact` = message court (nom, email,
+   > téléphone, message) ; `Demander un devis` = chiffrage complet (société,
+   > activité, volume…). Les deux sont protégés contre les robots (honeypot +
+   > piège temporel signé + jeton de sécurité), sans reCAPTCHA ni service
+   > externe. La même protection couvre le formulaire de commentaires.
 
    > Gardez le **slug d'URL existant** de chaque page (ex. `/comment-ca-marche/`).
    > Le thème ne change pas les URL ; il ne fait qu'appliquer un design.

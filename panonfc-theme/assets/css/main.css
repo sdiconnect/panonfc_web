@@ -838,6 +838,16 @@ body.mobile-nav-open { overflow: hidden; }
 .contact-aside__navy h3 { font-size: 18px; font-weight: var(--fw-bold); color: var(--white); margin-bottom: 8px; }
 .contact-aside__navy p { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.72); margin-bottom: 18px; }
 
+/* Simple contact page */
+.contact-simple { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 32px; align-items: start; }
+.contact-mini { display: flex; flex-direction: column; gap: 16px; }
+.contact-mini__item { display: block; transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard); }
+.contact-mini__item .l { display: block; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 8px; }
+.contact-mini__item b { display: block; font-size: 20px; font-weight: var(--fw-extrabold); color: var(--pano-navy); letter-spacing: -0.02em; margin-bottom: 4px; }
+.contact-mini__item .s { display: block; font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+a.contact-mini__item:hover { border-color: var(--navy-300); box-shadow: var(--shadow-md); }
+@media (max-width: 999px) { .contact-simple { grid-template-columns: 1fr; } }
+
 /* ============================================================
    24. WordPress content (blog / fallback single & page)
    ============================================================ */

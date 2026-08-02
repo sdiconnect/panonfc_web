@@ -151,7 +151,10 @@ function panonfc_console_url() {
  */
 function panonfc_url( $role ) {
 	$map = array(
-		'devis'      => array( 'contact', 'devis', 'demander-un-devis' ),
+		// Quote page (full form) — prefer a dedicated devis page, fall back to contact.
+		'devis'      => array( 'demander-un-devis', 'devis', 'contact' ),
+		// Simple contact page.
+		'contact'    => array( 'contact', 'nous-contacter', 'demander-un-devis', 'devis' ),
 		'solution'   => array( 'la-solution', 'comment-ca-marche', 'solution' ),
 		'tarifs'     => array( 'tarifs', 'tarif' ),
 		'immobilier' => array( 'immobilier' ),

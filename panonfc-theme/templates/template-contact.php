@@ -1,6 +1,9 @@
 <?php
 /**
- * Template Name: PANONFC — Contact / Devis
+ * Template Name: PANONFC — Demander un devis
+ *
+ * Full quote form (société, activité, volume, upload…). For a light contact
+ * form use the "PANONFC — Contact" template instead.
  *
  * @package panonfc
  */
@@ -44,12 +47,9 @@ $state = panonfc_form_state();
 
 				<?php if ( 'ok' !== $state['status'] ) : ?>
 				<form method="post" action="#form" novalidate>
-					<?php wp_nonce_field( 'panonfc_contact', 'panonfc_contact_nonce' ); ?>
-					<input type="hidden" name="panonfc_contact" value="1">
-					<div class="form-hp" aria-hidden="true">
-						<label for="panonfc_website">Ne pas remplir</label>
-						<input type="text" id="panonfc_website" name="panonfc_website" tabindex="-1" autocomplete="off">
-					</div>
+					<?php wp_nonce_field( 'panonfc_form', 'panonfc_form_nonce' ); ?>
+					<input type="hidden" name="panonfc_form" value="devis">
+					<?php panonfc_antibot_render(); ?>
 
 					<div class="form-grid-2">
 						<div>

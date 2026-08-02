@@ -23,7 +23,7 @@ function panonfc_default_primary_items() {
 			array( 'label' => 'Chantier', 'url' => panonfc_url( 'chantier' ) ),
 			array( 'label' => 'La solution', 'url' => panonfc_url( 'solution' ) ),
 			array( 'label' => 'Tarifs', 'url' => panonfc_url( 'tarifs' ) ),
-			array( 'label' => 'Contact', 'url' => panonfc_url( 'devis' ) ),
+			array( 'label' => 'Contact', 'url' => panonfc_url( 'contact' ) ),
 		)
 	);
 }

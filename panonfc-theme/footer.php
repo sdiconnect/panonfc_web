@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<ul>
 					<li><a class="is-strong" href="<?php echo esc_attr( panonfc_phone_href() ); ?>"><?php echo esc_html( panonfc_phone_display() ); ?></a></li>
 					<li><?php echo wp_kses_post( apply_filters( 'panonfc_footer_address', '60 rue François 1er<br>75008 Paris' ) ); ?></li>
-					<li><a href="<?php echo esc_url( panonfc_url( 'devis' ) ); ?>"><?php esc_html_e( 'Formulaire de contact', 'panonfc' ); ?></a></li>
+					<li><a href="<?php echo esc_url( panonfc_url( 'contact' ) ); ?>"><?php esc_html_e( 'Formulaire de contact', 'panonfc' ); ?></a></li>
 				</ul>
 			</div>
 		</div>
