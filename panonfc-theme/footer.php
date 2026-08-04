@@ -61,9 +61,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div><?php esc_html_e( 'Une solution imaginée et développée par', 'panonfc' ); ?> <a class="brandlink" href="https://sdi-connect.com/" rel="noopener">Solutions Digitales Intégrées</a></div>
 			<nav class="site-footer__legal" aria-label="<?php esc_attr_e( 'Liens légaux', 'panonfc' ); ?>">
 				<a href="<?php echo esc_url( home_url( '/mentions-legales/' ) ); ?>"><?php esc_html_e( 'Mentions légales', 'panonfc' ); ?></a>
-				<a href="<?php echo esc_url( home_url( '/confidentialite/' ) ); ?>"><?php esc_html_e( 'Confidentialité', 'panonfc' ); ?></a>
-				<a href="<?php echo esc_url( home_url( '/cookies/' ) ); ?>"><?php esc_html_e( 'Cookies', 'panonfc' ); ?></a>
-				<a href="<?php echo esc_url( home_url( '/cgv/' ) ); ?>"><?php esc_html_e( 'CGV', 'panonfc' ); ?></a>
+				<a href="<?php echo esc_url( home_url( '/politique-de-confidentialite/' ) ); ?>"><?php esc_html_e( 'Confidentialité', 'panonfc' ); ?></a>
+				<a href="<?php echo esc_url( home_url( '/politique-de-cookies/' ) ); ?>"><?php esc_html_e( 'Cookies', 'panonfc' ); ?></a>
+				<a href="<?php echo esc_url( home_url( '/conditions-generales-de-vente/' ) ); ?>"><?php esc_html_e( 'CGV', 'panonfc' ); ?></a>
 			</nav>
 		</div>
 	</div>

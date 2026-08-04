@@ -36,10 +36,12 @@ body.panonfc {
   text-wrap: balance;
 }
 
-.panonfc p { margin: 0; text-wrap: pretty; }
-.panonfc ul, .panonfc ol { margin: 0; padding: 0; list-style: none; }
-.panonfc figure { margin: 0; }
-.panonfc img { max-width: 100%; }
+/* Low-specificity (:where) base resets so component classes keep their own
+   margins/centering (e.g. .cta__lead { margin: 0 auto }). */
+.panonfc :where(p) { margin: 0; text-wrap: pretty; }
+.panonfc :where(ul), .panonfc :where(ol) { margin: 0; padding: 0; list-style: none; }
+.panonfc :where(figure) { margin: 0; }
+.panonfc :where(img) { max-width: 100%; }
 
 /* Base link color is a low-specificity fallback (:where) so component classes
    like .btn--on-navy always win their own color. */
