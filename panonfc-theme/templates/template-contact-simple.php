@@ -9,8 +9,7 @@
  */
 
 get_header();
-$state = panonfc_form_state();
-$show  = ( '' === $state['form'] || 'contact' === $state['form'] );
+$notice = panonfc_form_notice();
 ?>
 
 <section class="section page-hero section--clip">
@@ -40,14 +39,14 @@ $show  = ( '' === $state['form'] || 'contact' === $state['form'] );
 				<h2 class="offer-title" style="margin-bottom:6px">Votre message</h2>
 				<p class="muted mb-7 card-text-15">Réponse en général sous 24 h ouvrées.</p>
 
-				<?php if ( $show && 'ok' === $state['status'] ) : ?>
-					<div class="form-alert form-alert--ok"><?php echo esc_html( $state['message'] ); ?></div>
-				<?php elseif ( $show && 'error' === $state['status'] ) : ?>
-					<div class="form-alert form-alert--err"><?php echo esc_html( $state['message'] ); ?></div>
+				<?php if ( 'ok' === $notice['status'] ) : ?>
+					<div class="form-alert form-alert--ok"><?php echo esc_html( $notice['message'] ); ?></div>
+				<?php elseif ( 'error' === $notice['status'] ) : ?>
+					<div class="form-alert form-alert--err"><?php echo esc_html( $notice['message'] ); ?></div>
 				<?php endif; ?>
 
-				<?php if ( ! ( $show && 'ok' === $state['status'] ) ) : ?>
-				<form method="post" action="#form" novalidate>
+				<?php if ( 'ok' !== $notice['status'] ) : ?>
+				<form method="post" action="#form" class="panonfc-form" novalidate>
 					<?php wp_nonce_field( 'panonfc_form', 'panonfc_form_nonce' ); ?>
 					<input type="hidden" name="panonfc_form" value="contact">
 					<?php panonfc_antibot_render(); ?>

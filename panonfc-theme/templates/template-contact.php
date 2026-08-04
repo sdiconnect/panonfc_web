@@ -9,7 +9,7 @@
  */
 
 get_header();
-$state = panonfc_form_state();
+$notice = panonfc_form_notice();
 ?>
 
 <section class="section page-hero section--clip">
@@ -39,14 +39,14 @@ $state = panonfc_form_state();
 				<h2 class="offer-title" style="margin-bottom:6px">Votre projet</h2>
 				<p class="muted mb-7" style="font-size:14.5px;line-height:1.6">Les champs marqués d'un astérisque sont nécessaires au chiffrage.</p>
 
-				<?php if ( 'ok' === $state['status'] ) : ?>
-					<div class="form-alert form-alert--ok"><?php echo esc_html( $state['message'] ); ?></div>
-				<?php elseif ( 'error' === $state['status'] ) : ?>
-					<div class="form-alert form-alert--err"><?php echo esc_html( $state['message'] ); ?></div>
+				<?php if ( 'ok' === $notice['status'] ) : ?>
+					<div class="form-alert form-alert--ok"><?php echo esc_html( $notice['message'] ); ?></div>
+				<?php elseif ( 'error' === $notice['status'] ) : ?>
+					<div class="form-alert form-alert--err"><?php echo esc_html( $notice['message'] ); ?></div>
 				<?php endif; ?>
 
-				<?php if ( 'ok' !== $state['status'] ) : ?>
-				<form method="post" action="#form" novalidate>
+				<?php if ( 'ok' !== $notice['status'] ) : ?>
+				<form method="post" action="#form" class="panonfc-form" novalidate>
 					<?php wp_nonce_field( 'panonfc_form', 'panonfc_form_nonce' ); ?>
 					<input type="hidden" name="panonfc_form" value="devis">
 					<?php panonfc_antibot_render(); ?>
@@ -113,7 +113,7 @@ $state = panonfc_form_state();
 					</div>
 
 					<div class="form-consent">
-						<input type="checkbox" id="c-rgpd" name="consent" value="1"<?php echo ( 'error' === $state['status'] && ! empty( $_POST['consent'] ) ) ? ' checked' : ''; // phpcs:ignore WordPress.Security.NonceVerification ?>>
+						<input type="checkbox" id="c-rgpd" name="consent" value="1"<?php echo ( 'error' === $notice['status'] && ! empty( $_POST['consent'] ) ) ? ' checked' : ''; // phpcs:ignore WordPress.Security.NonceVerification ?>>
 						<label for="c-rgpd">J'accepte que mes informations soient utilisées pour traiter ma demande. Elles ne sont ni revendues ni utilisées à d'autres fins.</label>
 					</div>
 

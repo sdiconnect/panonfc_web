@@ -70,6 +70,23 @@ function panonfc_enqueue_assets() {
 		);
 	}
 
+	// Contact / Devis forms: refresh security tokens client-side so the forms
+	// keep working on full-page-cached pages.
+	if ( is_page_template( 'templates/template-contact.php' ) || is_page_template( 'templates/template-contact-simple.php' ) ) {
+		wp_enqueue_script(
+			'panonfc-forms',
+			PANONFC_URI . '/assets/js/forms.js',
+			array(),
+			PANONFC_VERSION,
+			true
+		);
+		wp_localize_script(
+			'panonfc-forms',
+			'PANONFC_FORMS',
+			array( 'tokenUrl' => esc_url_raw( rest_url( 'panonfc/v1/form-token' ) ) )
+		);
+	}
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}

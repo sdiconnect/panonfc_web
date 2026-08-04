@@ -163,6 +163,31 @@ suffixée dans le nom du dossier.
 
 ---
 
+## 5 bis. Formulaires, cache & tracking des conversions
+
+Les formulaires sont conçus pour rester fiables sur un site **fortement mis en
+cache** (WP Rocket / Cloudflare) :
+
+- **Post/Redirect/Get** : après envoi, le POST ne régénère pas la page — il
+  redirige vers `…?envoi=ok`. Pas de double-soumission, état de succès fiable.
+- **Tokens rafraîchis côté client** : le nonce et le jeton anti-bot sont
+  régénérés au chargement via `…/wp-json/panonfc/v1/form-token`, donc le
+  formulaire fonctionne même si la page HTML est servie depuis le cache
+  (plus de « La session a expiré »).
+- **Évènement conversion** : un `generate_lead` est poussé dans le `dataLayer`
+  sur `?envoi=ok`. Dans **GTM**, crée un déclencheur « Évènement personnalisé »
+  nommé `generate_lead` (ou un déclencheur sur l'URL contenant `envoi=ok`), et
+  branche-y ta conversion Google Ads. C'est bien plus fiable que d'attendre le
+  rendu d'un élément `.form-alert--ok`.
+
+> **Important (hébergement, hors thème)** : si une page front **non cachée** met
+> ~11 s à se générer, c'est un problème serveur, pas le thème. À faire vérifier
+> par l'hébergeur : nombre de **workers PHP-FPM** et **slow log**. Il est aussi
+> recommandé d'**exclure `/devis/` et `/contact/` du cache** (WP Rocket →
+> Options avancées → « Ne jamais mettre en cache (URL) » ; et une page rule
+> Cloudflare « Bypass cache ») — le rafraîchissement de token ci-dessus couvre
+> déjà le cas, mais l'exclusion règle aussi les visiteurs sans JavaScript.
+
 ## 6. Accessibilité, perf, SEO — déjà pris en charge
 
 - Poppins **auto-hébergé** (woff2, `font-display: swap`, préchargé).

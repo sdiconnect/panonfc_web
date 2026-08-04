@@ -150,6 +150,13 @@ function panonfc_console_url() {
  * @return string
  */
 function panonfc_url( $role ) {
+	// Resolve each role once per request (avoids repeated get_page_by_path()
+	// queries when the same CTA link is used many times on a page).
+	static $cache = array();
+	if ( isset( $cache[ $role ] ) ) {
+		return $cache[ $role ];
+	}
+
 	$map = array(
 		// Quote page (full form) — prefer a dedicated devis page, fall back to contact.
 		'devis'      => array( 'demander-un-devis', 'devis', 'contact' ),
@@ -164,7 +171,7 @@ function panonfc_url( $role ) {
 
 	$overrides = apply_filters( 'panonfc_url_overrides', array() );
 	if ( isset( $overrides[ $role ] ) ) {
-		return $overrides[ $role ];
+		return $cache[ $role ] = $overrides[ $role ];
 	}
 
 	if ( isset( $map[ $role ] ) ) {
@@ -172,14 +179,14 @@ function panonfc_url( $role ) {
 			// Pages.
 			$page = get_page_by_path( $slug );
 			if ( $page ) {
-				return get_permalink( $page );
+				return $cache[ $role ] = get_permalink( $page );
 			}
 			// WooCommerce products (for the "produit" role).
 			if ( 'produit' === $role && post_type_exists( 'product' ) ) {
 				$product_slug = basename( $slug );
 				$found        = get_page_by_path( $product_slug, OBJECT, 'product' );
 				if ( $found ) {
-					return get_permalink( $found );
+					return $cache[ $role ] = get_permalink( $found );
 				}
 			}
 		}
@@ -189,11 +196,11 @@ function panonfc_url( $role ) {
 	if ( 'produit' === $role && function_exists( 'wc_get_page_id' ) ) {
 		$shop = wc_get_page_id( 'shop' );
 		if ( $shop > 0 ) {
-			return get_permalink( $shop );
+			return $cache[ $role ] = get_permalink( $shop );
 		}
 	}
 
-	return home_url( '/' );
+	return $cache[ $role ] = home_url( '/' );
 }
 
 /**

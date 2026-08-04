@@ -2,13 +2,16 @@
 /**
  * Front-end forms: simple Contact + full Devis (quote).
  *
- * Both are self-processing (POST to the same URL) with:
- *   - a WordPress nonce,
- *   - a honeypot field (must stay empty),
- *   - a signed time-trap (form must take >= 3s and < 1h to submit),
- *   - required RGPD consent.
- * No external service, no reCAPTCHA — privacy-friendly and dependency-free.
- * The same anti-bot check also guards the WordPress comment form.
+ * Reliability model (important on a heavily-cached site):
+ *   - POST is processed on `template_redirect`, BEFORE the (slow, uncached)
+ *     page renders. On success we send mail non-blocking and 302-redirect to
+ *     ?envoi=ok (Post/Redirect/Get) — the POST never re-renders the page, and
+ *     the success state survives as a URL param (reliable for GTM).
+ *   - Anti-bot: honeypot + signed time-trap + nonce. Because a cached page
+ *     bakes the nonce and the time token, both would go stale; a tiny REST
+ *     endpoint + forms.js refresh them client-side so cached pages still work.
+ *     The time-trap no longer hard-rejects "old" tokens (that silently dropped
+ *     submissions from long-cached pages).
  *
  * @package panonfc
  */
@@ -18,13 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Per-request result of a submission.
+ * Per-request result of a submission (validation errors are shown inline so
+ * fields can be repopulated; success is shown after the PRG redirect).
  *
  * @return array{status:string,errors:array,message:string,form:string}
  */
 function &panonfc_form_state() {
 	static $state = array(
-		'status'  => '', // '', 'ok', 'error'.
+		'status'  => '',
 		'errors'  => array(),
 		'message' => '',
 		'form'    => '',
@@ -34,43 +38,46 @@ function &panonfc_form_state() {
 
 /**
  * Recipient address for form submissions (Contact + Devis).
- *
- * Uses the WordPress admin email (Réglages → Général). Override with the
- * `panonfc_contact_recipient` filter if you ever need a different address.
+ * Uses the WordPress admin email; override with the filter if needed.
  */
 function panonfc_contact_recipient() {
 	return apply_filters( 'panonfc_contact_recipient', get_option( 'admin_email' ) );
 }
 
 /* ============================================================
-   Anti-bot: honeypot + signed time-trap (shared by all forms)
+   Anti-bot: honeypot + signed time-trap (cache-safe)
    ============================================================ */
+
+/**
+ * A fresh signed time token "unixtime:hmac".
+ */
+function panonfc_time_token() {
+	$t = time();
+	return $t . ':' . hash_hmac( 'sha256', (string) $t, wp_salt( 'auth' ) );
+}
 
 /**
  * Output the hidden anti-bot fields inside a form.
  */
 function panonfc_antibot_render() {
-	$t   = time();
-	$sig = hash_hmac( 'sha256', (string) $t, wp_salt( 'auth' ) );
 	echo '<div class="form-hp" aria-hidden="true">';
 	echo '<label for="panonfc_website">' . esc_html__( 'Ne pas remplir ce champ', 'panonfc' ) . '</label>';
 	echo '<input type="text" id="panonfc_website" name="panonfc_website" tabindex="-1" autocomplete="off">';
 	echo '</div>';
-	printf( '<input type="hidden" name="panonfc_t" value="%s">', esc_attr( $t . ':' . $sig ) );
+	printf( '<input type="hidden" name="panonfc_t" value="%s">', esc_attr( panonfc_time_token() ) );
 }
 
 /**
- * Decide whether the current POST looks like a bot.
+ * Whether the current POST looks like a bot.
  *
- * @return bool True if it should be treated as a bot.
+ * @return bool
  */
 function panonfc_is_bot() {
-	// 1. Honeypot must be empty.
+	// Honeypot must stay empty.
 	if ( ! empty( $_POST['panonfc_website'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		return true;
 	}
 
-	// 2. Signed time-trap.
 	$raw = isset( $_POST['panonfc_t'] ) ? sanitize_text_field( wp_unslash( $_POST['panonfc_t'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	if ( '' === $raw || false === strpos( $raw, ':' ) ) {
 		return true;
@@ -79,12 +86,12 @@ function panonfc_is_bot() {
 	if ( ! ctype_digit( $t ) ) {
 		return true;
 	}
-	$expected = hash_hmac( 'sha256', $t, wp_salt( 'auth' ) );
-	if ( ! hash_equals( $expected, $sig ) ) {
+	if ( ! hash_equals( hash_hmac( 'sha256', $t, wp_salt( 'auth' ) ), $sig ) ) {
 		return true;
 	}
-	$elapsed = time() - (int) $t;
-	if ( $elapsed < 3 || $elapsed > HOUR_IN_SECONDS ) {
+	// Too fast = bot. No upper bound on purpose: a long-cached page keeps an
+	// old baked token, and we must not silently drop a real human's submission.
+	if ( ( time() - (int) $t ) < 2 ) {
 		return true;
 	}
 
@@ -92,8 +99,69 @@ function panonfc_is_bot() {
 }
 
 /* ============================================================
-   Contact + Devis handler
+   Fresh tokens via REST (so cached form pages still submit)
    ============================================================ */
+
+add_action(
+	'rest_api_init',
+	function () {
+		register_rest_route(
+			'panonfc/v1',
+			'/form-token',
+			array(
+				'methods'             => 'GET',
+				'permission_callback' => '__return_true',
+				'callback'            => function () {
+					$response = new WP_REST_Response(
+						array(
+							'nonce' => wp_create_nonce( 'panonfc_form' ),
+							't'     => panonfc_time_token(),
+						)
+					);
+					$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
+					return $response;
+				},
+			)
+		);
+	}
+);
+
+/* ============================================================
+   Handler
+   ============================================================ */
+
+/**
+ * Build the PRG redirect URL back to the form page.
+ *
+ * @param string $status ok|error
+ */
+function panonfc_form_redirect_url( $status ) {
+	$base = wp_get_referer();
+	if ( ! $base ) {
+		$base = home_url( add_query_arg( array() ) );
+	}
+	$base = remove_query_arg( array( 'envoi' ), $base );
+	return add_query_arg( 'envoi', $status, $base ) . '#form';
+}
+
+/**
+ * Send the response, then (non-blocking) the emails, then stop.
+ *
+ * @param string   $status   ok|error for the redirect.
+ * @param callable $mailer   Optional callback that sends the emails.
+ */
+function panonfc_form_finish( $status, $mailer = null ) {
+	wp_safe_redirect( panonfc_form_redirect_url( $status ) );
+
+	// Flush the redirect to the browser, then keep running to send mail.
+	if ( function_exists( 'fastcgi_finish_request' ) ) {
+		fastcgi_finish_request();
+	}
+	if ( is_callable( $mailer ) ) {
+		call_user_func( $mailer );
+	}
+	exit;
+}
 
 /**
  * Process a submission early in the request.
@@ -113,11 +181,9 @@ function panonfc_handle_form() {
 		return;
 	}
 
-	// Anti-bot — silently accept (pretend success) so bots get no feedback.
+	// Anti-bot — redirect to a fake success (no mail) so bots get no signal.
 	if ( panonfc_is_bot() ) {
-		$state['status']  = 'ok';
-		$state['message'] = __( 'Merci, votre message a bien été envoyé.', 'panonfc' );
-		return;
+		panonfc_form_finish( 'ok' );
 	}
 
 	if ( 'contact' === $type ) {
@@ -161,36 +227,34 @@ function panonfc_process_contact( &$state ) {
 		return;
 	}
 
-	$to      = panonfc_contact_recipient();
-	$subject = sprintf( '[Contact panonfc] %s', $fields['nom'] );
-	$body    = sprintf(
-		"Nouveau message depuis le formulaire de contact panonfc.com\n\nNom : %s\nEmail : %s\nTéléphone : %s\n\nMessage :\n%s\n",
-		$fields['nom'],
-		$fields['email'],
-		$fields['tel'] ? $fields['tel'] : '—',
-		$fields['message']
+	panonfc_form_finish(
+		'ok',
+		function () use ( $fields ) {
+			$to      = panonfc_contact_recipient();
+			$subject = sprintf( '[Contact panonfc] %s', $fields['nom'] );
+			$body    = sprintf(
+				"Nouveau message depuis le formulaire de contact panonfc.com\n\nNom : %s\nEmail : %s\nTéléphone : %s\n\nMessage :\n%s\n",
+				$fields['nom'],
+				$fields['email'],
+				$fields['tel'] ? $fields['tel'] : '—',
+				$fields['message']
+			);
+			$headers = array(
+				'Content-Type: text/plain; charset=UTF-8',
+				'Reply-To: ' . $fields['nom'] . ' <' . $fields['email'] . '>',
+			);
+			$sent = wp_mail( $to, $subject, $body, $headers );
+			do_action( 'panonfc_contact_submitted', $fields, $sent, 'contact' );
+			if ( $sent ) {
+				wp_mail(
+					$fields['email'],
+					__( 'Votre message a bien été reçu — PANONFC', 'panonfc' ),
+					sprintf( "Bonjour %s,\n\nMerci de votre message, nous vous répondons rapidement.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
+					array( 'Content-Type: text/plain; charset=UTF-8' )
+				);
+			}
+		}
 	);
-	$headers = array(
-		'Content-Type: text/plain; charset=UTF-8',
-		'Reply-To: ' . $fields['nom'] . ' <' . $fields['email'] . '>',
-	);
-
-	$sent = wp_mail( $to, $subject, $body, $headers );
-	do_action( 'panonfc_contact_submitted', $fields, $sent, 'contact' );
-
-	if ( $sent ) {
-		wp_mail(
-			$fields['email'],
-			__( 'Votre message a bien été reçu — PANONFC', 'panonfc' ),
-			sprintf( "Bonjour %s,\n\nMerci de votre message, nous vous répondons rapidement.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
-			array( 'Content-Type: text/plain; charset=UTF-8' )
-		);
-		$state['status']  = 'ok';
-		$state['message'] = __( 'Merci, votre message a bien été envoyé. Nous vous répondons rapidement.', 'panonfc' );
-	} else {
-		$state['status']  = 'error';
-		$state['message'] = __( 'L\'envoi a échoué. Merci de nous appeler ou de réessayer.', 'panonfc' );
-	}
 }
 
 /**
@@ -230,42 +294,60 @@ function panonfc_process_devis( &$state ) {
 		return;
 	}
 
-	$to      = panonfc_contact_recipient();
-	$subject = sprintf( '[Devis panonfc] %s — %s', $fields['nom'], $fields['societe'] );
-	$body    = sprintf(
-		"Nouvelle demande de devis depuis panonfc.com\n\n" .
-		"Nom : %s\nSociété : %s\nEmail : %s\nTéléphone : %s\n" .
-		"Activité : %s\nType de panneau : %s\nVolume estimé : %s\n\nMessage :\n%s\n",
-		$fields['nom'],
-		$fields['societe'],
-		$fields['email'],
-		$fields['tel'] ? $fields['tel'] : '—',
-		$fields['activite'],
-		$fields['produit'],
-		$fields['volume'],
-		$fields['message'] ? $fields['message'] : '—'
+	panonfc_form_finish(
+		'ok',
+		function () use ( $fields ) {
+			$to      = panonfc_contact_recipient();
+			$subject = sprintf( '[Devis panonfc] %s — %s', $fields['nom'], $fields['societe'] );
+			$body    = sprintf(
+				"Nouvelle demande de devis depuis panonfc.com\n\n" .
+				"Nom : %s\nSociété : %s\nEmail : %s\nTéléphone : %s\n" .
+				"Activité : %s\nType de panneau : %s\nVolume estimé : %s\n\nMessage :\n%s\n",
+				$fields['nom'],
+				$fields['societe'],
+				$fields['email'],
+				$fields['tel'] ? $fields['tel'] : '—',
+				$fields['activite'],
+				$fields['produit'],
+				$fields['volume'],
+				$fields['message'] ? $fields['message'] : '—'
+			);
+			$headers = array(
+				'Content-Type: text/plain; charset=UTF-8',
+				'Reply-To: ' . $fields['nom'] . ' <' . $fields['email'] . '>',
+			);
+			$sent = wp_mail( $to, $subject, $body, $headers );
+			do_action( 'panonfc_contact_submitted', $fields, $sent, 'devis' );
+			if ( $sent ) {
+				wp_mail(
+					$fields['email'],
+					__( 'Votre demande de devis PANONFC', 'panonfc' ),
+					sprintf( "Bonjour %s,\n\nNous avons bien reçu votre demande et revenons vers vous sous 24 h ouvrées avec un chiffrage.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
+					array( 'Content-Type: text/plain; charset=UTF-8' )
+				);
+			}
+		}
 	);
-	$headers = array(
-		'Content-Type: text/plain; charset=UTF-8',
-		'Reply-To: ' . $fields['nom'] . ' <' . $fields['email'] . '>',
-	);
+}
 
-	$sent = wp_mail( $to, $subject, $body, $headers );
-	do_action( 'panonfc_contact_submitted', $fields, $sent, 'devis' );
-
-	if ( $sent ) {
-		wp_mail(
-			$fields['email'],
-			__( 'Votre demande de devis PANONFC', 'panonfc' ),
-			sprintf( "Bonjour %s,\n\nNous avons bien reçu votre demande et revenons vers vous sous 24 h ouvrées avec un chiffrage.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
-			array( 'Content-Type: text/plain; charset=UTF-8' )
-		);
-		$state['status']  = 'ok';
-		$state['message'] = __( 'Merci, votre demande a bien été envoyée. Nous revenons vers vous sous 24 h ouvrées.', 'panonfc' );
-	} else {
-		$state['status']  = 'error';
-		$state['message'] = __( 'L\'envoi a échoué. Merci de nous appeler ou de réessayer.', 'panonfc' );
+/**
+ * Notice to display: inline validation error (POST) or post-redirect success.
+ *
+ * @return array{status:string,message:string}
+ */
+function panonfc_form_notice() {
+	$state = panonfc_form_state();
+	if ( 'error' === $state['status'] ) {
+		return array( 'status' => 'error', 'message' => $state['message'] );
 	}
+	$envoi = isset( $_GET['envoi'] ) ? sanitize_key( wp_unslash( $_GET['envoi'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	if ( 'ok' === $envoi ) {
+		return array( 'status' => 'ok', 'message' => __( 'Merci, votre demande a bien été envoyée. Nous revenons vers vous rapidement.', 'panonfc' ) );
+	}
+	if ( 'error' === $envoi ) {
+		return array( 'status' => 'error', 'message' => __( 'L\'envoi a échoué. Merci de nous appeler ou de réessayer.', 'panonfc' ) );
+	}
+	return array( 'status' => '', 'message' => '' );
 }
 
 /**
@@ -279,6 +361,19 @@ function panonfc_old( $key ) {
 	return '';
 }
 
+/**
+ * Push a generate_lead event to the dataLayer after a successful submission,
+ * so GTM / GA4 / Ads can track conversions reliably from the URL param.
+ */
+function panonfc_lead_datalayer() {
+	$envoi = isset( $_GET['envoi'] ) ? sanitize_key( wp_unslash( $_GET['envoi'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	if ( 'ok' !== $envoi ) {
+		return;
+	}
+	echo "<script>window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'generate_lead',form_location:'panonfc'});</script>\n";
+}
+add_action( 'wp_footer', 'panonfc_lead_datalayer', 20 );
+
 /* ============================================================
    Comment form protection (same anti-bot)
    ============================================================ */
@@ -286,11 +381,7 @@ function panonfc_old( $key ) {
 add_action( 'comment_form_after_fields', 'panonfc_antibot_render' );
 add_action( 'comment_form_logged_in_after', 'panonfc_antibot_render' );
 
-/**
- * Reject spam comments that fail the honeypot / time-trap.
- */
 function panonfc_comment_antibot( $commentdata ) {
-	// Only guard front-end submissions (skip programmatic/admin creation).
 	if ( isset( $_POST['panonfc_t'] ) && panonfc_is_bot() ) { // phpcs:ignore WordPress.Security.NonceVerification
 		wp_die(
 			esc_html__( 'Votre commentaire a été identifié comme indésirable.', 'panonfc' ),
