@@ -146,7 +146,8 @@ function panonfc_console_url() {
  * Resolve an internal page URL by its "role", so templates never hardcode
  * slugs. Falls back to home if the page does not exist yet.
  *
- * @param string $role One of: devis, solution, tarifs, immobilier, chantier, produit.
+ * @param string $role One of: devis, contact, solution, tarifs, immobilier, chantier, produit,
+ *                     avis, bailleurs, syndics, plaques, entreprise, demo.
  * @return string
  */
 function panonfc_url( $role ) {
@@ -164,8 +165,15 @@ function panonfc_url( $role ) {
 		'contact'    => array( 'contact', 'nous-contacter', 'demander-un-devis', 'devis' ),
 		'solution'   => array( 'la-solution', 'comment-ca-marche', 'solution' ),
 		'tarifs'     => array( 'tarifs', 'tarif' ),
-		'immobilier' => array( 'immobilier' ),
-		'chantier'   => array( 'chantier' ),
+		'immobilier' => array( 'panneaux-immobiliers-connectes', 'immobilier' ),
+		'chantier'   => array( 'panneaux-chantier-connectes', 'chantier' ),
+		// Habitat & copropriété / Entreprises (v1.2.0).
+		'avis'       => array( 'avis-residents' ),
+		'bailleurs'  => array( 'bailleurs-sociaux' ),
+		'syndics'    => array( 'syndics-coproprietes' ),
+		'plaques'    => array( 'plaques-qr-code-nfc-equipements' ),
+		'entreprise' => array( 'compte-entreprise' ),
+		'demo'       => array( 'demander-une-demo', 'contact' ),
 		'produit'    => array( 'produit/panneau-plat-connecte', 'panneau-plat-connecte' ),
 	);
 

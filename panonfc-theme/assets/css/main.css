@@ -1132,3 +1132,18 @@ a.contact-mini__item:hover { border-color: var(--navy-300); box-shadow: var(--sh
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* ============================================================
+   v1.2.0 — Habitat & copropriété / Compte Entreprise
+   ============================================================ */
+/* Float card used alone in a page hero (no photo behind it). */
+.floatcard--static {
+  position: relative; left: auto; bottom: auto; width: 100%; max-width: 380px;
+  justify-self: end; align-self: center; margin: 0;
+}
+.floatcard--static .floatcard__foot { font-size: 13px; color: var(--text-muted); }
+@media (max-width: 999px) {
+  .floatcard--static { justify-self: start; margin: 8px 0 0; }
+}
+/* Marker list on navy backgrounds. */
+.marker-list--on-navy li { color: rgba(255,255,255,0.86); }

@@ -31,7 +31,7 @@ get_header();
 		</div>
 		<div class="hero__media">
 			<figure class="hero__photo">
-				<img src="<?php echo esc_url( panonfc_image( 'hero-home' ) ); ?>" alt="Panneau en V connecté PANONFC installé devant un bien" width="920" height="460" fetchpriority="high">
+				<img src="<?php echo esc_url( panonfc_image( 'hero-home' ) ); ?>" alt="Panneau en V connecté PanoNFC installé devant un bien" width="920" height="460" fetchpriority="high">
 			</figure>
 			<div class="floatcard">
 				<div class="floatcard__head">
@@ -62,6 +62,39 @@ get_header();
 	</div>
 </section>
 
+<?php /* 2 bis. UNIVERS (v1.2.0) ---------------------------------------------- */ ?>
+<section class="section section--surface" id="univers">
+	<div class="container section__inner">
+		<div class="section-head">
+			<div class="section-head__title">
+				<span class="eyebrow">Nos solutions</span>
+				<h2 class="h2--md">Un même principe, trois usages</h2>
+			</div>
+			<p class="section-head__aside">Un support physique à identifiant unique, un lien que vous pilotez, une plateforme pour suivre ce qui se passe sur le terrain.</p>
+		</div>
+		<div class="grid cols-3 grid--gap-lg">
+			<article class="card card--accent card--hover stack">
+				<div class="product-card__cat">Immobilier et chantier</div>
+				<h3 class="offer-title">Panneaux connectés</h3>
+				<p class="muted mb-6 card-text-15">Panneaux « À vendre », « À louer » et de chantier : l'annonce et vos coordonnées en un scan.</p>
+				<a class="arrow-link mt-auto" href="<?php echo esc_url( panonfc_url( 'immobilier' ) ); ?>">Panneaux immobiliers →</a>
+			</article>
+			<article class="card card--hover stack">
+				<div class="product-card__cat">Réseaux d'agences</div>
+				<h3 class="offer-title">Compte Entreprise</h3>
+				<p class="muted mb-6 card-text-15">Tous les panneaux du réseau, par agence, avec des droits par collaborateur et des statistiques consolidées.</p>
+				<a class="arrow-link mt-auto" href="<?php echo esc_url( panonfc_url( 'entreprise' ) ); ?>">Compte Entreprise →</a>
+			</article>
+			<article class="card card--hover stack">
+				<div class="product-card__cat">Bailleurs et copropriétés</div>
+				<h3 class="offer-title">Avis Résidents</h3>
+				<p class="muted mb-6 card-text-15">Une plaque QR code et NFC par ascenseur ou porte de garage, l'avis des résidents suivi par agence.</p>
+				<a class="arrow-link mt-auto" href="<?php echo esc_url( panonfc_url( 'bailleurs' ) ); ?>">Bailleurs et syndics →</a>
+			</article>
+		</div>
+	</div>
+</section>
+
 <?php /* 3. LE PRINCIPE ----------------------------------------------------- */ ?>
 <section class="section section--white" id="solution">
 	<div class="container section__inner">
@@ -69,7 +102,7 @@ get_header();
 			<div>
 				<span class="eyebrow">Le principe</span>
 				<h2 class="h2">Un panneau, un identifiant, un contenu que vous gardez sous contrôle</h2>
-				<p class="lead--sm muted mt-5">Chaque panneau produit par PANONFC porte un identifiant unique imprimé et une puce NFC associée. Il est administrable seul, depuis votre console, à tout moment — y compris une fois posé.</p>
+				<p class="lead--sm muted mt-5">Chaque panneau produit par PanoNFC porte un identifiant unique imprimé et une puce NFC associée. Il est administrable seul, depuis votre console, à tout moment — y compris une fois posé.</p>
 			</div>
 			<div class="feature-grid">
 				<div class="card feature">
@@ -386,7 +419,7 @@ if ( $has_home_gallery ) :
 				<div class="faq"><h3>Le design est-il vraiment inclus ?</h3><p>Oui. Nous reprenons votre visuel ou votre charte pour intégrer le QR code et l'identifiant, avec BAT avant production.</p></div>
 				<div class="faq"><h3>Quels délais de livraison ?</h3><p>48 à 72 heures après validation du BAT, pour les commandes standards comme pour les réassorts.</p></div>
 				<div class="faq"><h3>Et pour un réseau multi-agences ?</h3><p>Vos panneaux s'organisent en groupes — par agence, programme ou chantier — avec un gabarit commun décliné à chaque point de vente.</p></div>
-				<div class="faq"><h3>La console est-elle payante ?</h3><p>Non. La création de compte et la gestion de vos panneaux sont comprises dans le prix des panneaux, sans abonnement.</p></div>
+				<div class="faq"><h3>La console est-elle payante ?</h3><p>Non. La création de compte et la gestion de vos panneaux sont comprises dans le prix des panneaux, sans abonnement. Le Compte Entreprise, pour les réseaux multi-agences, est une option annuelle.</p></div>
 			</div>
 		</div>
 	</div>

@@ -133,12 +133,12 @@ $notice = panonfc_form_notice();
 				</div>
 				<div class="card">
 					<div class="l">Adresse</div>
-					<p style="font-size:15px;line-height:1.65"><?php echo wp_kses_post( apply_filters( 'panonfc_contact_address', 'PANONFC — Solutions Digitales Intégrées<br>60 rue François 1er<br>75008 Paris' ) ); ?></p>
+					<p style="font-size:15px;line-height:1.65"><?php echo wp_kses_post( apply_filters( 'panonfc_contact_address', 'PanoNFC — Solutions Digitales Intégrées<br>60 rue François 1er<br>75008 Paris' ) ); ?></p>
 				</div>
 				<?php
 				if ( function_exists( 'get_field' ) && get_field( 'contact_photo' ) ) {
 					echo '<div class="card--flush card">';
-					panonfc_gallery_item( 'contact_photo', 'Équipe PANONFC ou atelier' );
+					panonfc_gallery_item( 'contact_photo', 'Équipe PanoNFC ou atelier' );
 					echo '</div>';
 				}
 				?>

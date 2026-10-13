@@ -66,7 +66,7 @@ get_header();
 				</div>
 			</div>
 			<figure class="pdp__gallery-main">
-				<img src="<?php echo esc_url( panonfc_image( 'chantier-shot' ) ); ?>" alt="Panneau de chantier PANONFC posé sur site" loading="lazy" class="img-cover-420">
+				<img src="<?php echo esc_url( panonfc_image( 'chantier-shot' ) ); ?>" alt="Panneau de chantier PanoNFC posé sur site" loading="lazy" class="img-cover-420">
 			</figure>
 		</div>
 	</div>

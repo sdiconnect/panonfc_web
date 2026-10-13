@@ -21,7 +21,8 @@ function panonfc_default_primary_items() {
 		array(
 			array( 'label' => 'Immobilier', 'url' => panonfc_url( 'immobilier' ) ),
 			array( 'label' => 'Chantier', 'url' => panonfc_url( 'chantier' ) ),
-			array( 'label' => 'La solution', 'url' => panonfc_url( 'solution' ) ),
+			array( 'label' => 'Bailleurs & syndics', 'url' => panonfc_url( 'bailleurs' ) ),
+			array( 'label' => 'Compte Entreprise', 'url' => panonfc_url( 'entreprise' ) ),
 			array( 'label' => 'Tarifs', 'url' => panonfc_url( 'tarifs' ) ),
 			array( 'label' => 'Contact', 'url' => panonfc_url( 'contact' ) ),
 		)
@@ -78,6 +79,9 @@ function panonfc_footer_products_fallback() {
 	echo '<li><a href="' . esc_url( panonfc_url( 'produit' ) ) . '">Panneau plat connecté</a></li>';
 	echo '<li><a href="' . esc_url( panonfc_url( 'immobilier' ) ) . '">Panneau en V connecté</a></li>';
 	echo '<li><a href="' . esc_url( panonfc_url( 'chantier' ) ) . '">Panneau de chantier</a></li>';
+	echo '<li><a href="' . esc_url( panonfc_url( 'plaques' ) ) . '">Plaques QR / NFC pour équipements</a></li>';
+	echo '<li><a href="' . esc_url( panonfc_url( 'avis' ) ) . '">Avis Résidents</a></li>';
+	echo '<li><a href="' . esc_url( panonfc_url( 'entreprise' ) ) . '">Compte Entreprise</a></li>';
 	echo '<li><a href="' . esc_url( panonfc_url( 'tarifs' ) ) . '">Tarifs</a></li>';
 	echo '</ul>';
 }
@@ -85,6 +89,8 @@ function panonfc_footer_products_fallback() {
 function panonfc_footer_resources_fallback() {
 	echo '<ul>';
 	echo '<li><a href="' . esc_url( panonfc_url( 'solution' ) ) . '">Comment ça marche</a></li>';
+	echo '<li><a href="' . esc_url( panonfc_url( 'bailleurs' ) ) . '">Bailleurs sociaux</a></li>';
+	echo '<li><a href="' . esc_url( panonfc_url( 'syndics' ) ) . '">Syndics et copropriétés</a></li>';
 	echo '<li><a href="' . esc_url( panonfc_console_url() ) . '">Console client</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/blog/' ) ) . '">Blog</a></li>';
 	echo '<li><a href="' . esc_url( panonfc_url( 'devis' ) ) . '">Demander un devis</a></li>';
