@@ -93,7 +93,7 @@ $notice = panonfc_form_notice();
 				</a>
 				<div class="card contact-mini__item">
 					<span class="l">Adresse</span>
-					<span class="s"><?php echo wp_kses_post( apply_filters( 'panonfc_contact_address', 'PANONFC — Solutions Digitales Intégrées<br>60 rue François 1er<br>75008 Paris' ) ); ?></span>
+					<span class="s"><?php echo wp_kses_post( apply_filters( 'panonfc_contact_address', 'PanoNFC — Solutions Digitales Intégrées<br>60 rue François 1er<br>75008 Paris' ) ); ?></span>
 				</div>
 				<a class="card contact-mini__item" href="<?php echo esc_url( panonfc_console_url() ); ?>">
 					<span class="l">Déjà client</span>

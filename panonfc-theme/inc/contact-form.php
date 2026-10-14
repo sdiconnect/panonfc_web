@@ -248,8 +248,8 @@ function panonfc_process_contact( &$state ) {
 			if ( $sent ) {
 				wp_mail(
 					$fields['email'],
-					__( 'Votre message a bien été reçu — PANONFC', 'panonfc' ),
-					sprintf( "Bonjour %s,\n\nMerci de votre message, nous vous répondons rapidement.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
+					__( 'Votre message a bien été reçu — PanoNFC', 'panonfc' ),
+					sprintf( "Bonjour %s,\n\nMerci de votre message, nous vous répondons rapidement.\n\nL'équipe PanoNFC\n%s", $fields['nom'], home_url( '/' ) ),
 					array( 'Content-Type: text/plain; charset=UTF-8' )
 				);
 			}
@@ -321,8 +321,8 @@ function panonfc_process_devis( &$state ) {
 			if ( $sent ) {
 				wp_mail(
 					$fields['email'],
-					__( 'Votre demande de devis PANONFC', 'panonfc' ),
-					sprintf( "Bonjour %s,\n\nNous avons bien reçu votre demande et revenons vers vous sous 24 h ouvrées avec un chiffrage.\n\nL'équipe PANONFC\n%s", $fields['nom'], home_url( '/' ) ),
+					__( 'Votre demande de devis PanoNFC', 'panonfc' ),
+					sprintf( "Bonjour %s,\n\nNous avons bien reçu votre demande et revenons vers vous sous 24 h ouvrées avec un chiffrage.\n\nL'équipe PanoNFC\n%s", $fields['nom'], home_url( '/' ) ),
 					array( 'Content-Type: text/plain; charset=UTF-8' )
 				);
 			}

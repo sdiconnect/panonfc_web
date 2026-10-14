@@ -95,12 +95,52 @@ get_header();
 	</div>
 </section>
 
+<section class="section section--white section--bordered-bottom">
+	<div class="container section__inner--tight section__inner">
+		<div class="measure mb-11">
+			<span class="eyebrow">Options et autres univers</span>
+			<h2 class="h2--sm">Réseaux, bailleurs et copropriétés</h2>
+		</div>
+		<div class="grid cols-3 grid--gap-lg">
+			<article class="card card--accent stack">
+				<div class="product-card__cat">Réseaux multi-agences</div>
+				<h3 class="offer-title">Compte Entreprise</h3>
+				<p class="muted mb-6 card-text-15">Agences, collaborateurs illimités, droits par agence et statistiques consolidées. Option annuelle à la console standard.</p>
+				<div class="offer-price-row">
+					<span class="subtle" style="font-size:13px">jusqu'à 100 panneaux</span>
+					<span class="offer-price"><?php echo esc_html( apply_filters( 'panonfc_entreprise_price', '490 €' ) ); ?></span>
+					<span class="subtle" style="font-size:13px">HT / an</span>
+				</div>
+				<a class="btn btn--navy btn--block mt-auto" href="<?php echo esc_url( panonfc_url( 'entreprise' ) ); ?>">Découvrir le Compte Entreprise</a>
+			</article>
+			<article class="card stack">
+				<div class="product-card__cat">Bailleurs · Syndics</div>
+				<h3 class="offer-title">Avis Résidents</h3>
+				<p class="muted mb-6 card-text-15">Questionnaires de satisfaction par équipement, alertes par agence et tableau de bord. Licence annuelle selon le nombre d'équipements.</p>
+				<div class="offer-price-row">
+					<span class="offer-price">Sur devis</span>
+				</div>
+				<a class="btn btn--secondary btn--block mt-auto" href="<?php echo esc_url( panonfc_url( 'avis' ) ); ?>">Découvrir Avis Résidents</a>
+			</article>
+			<article class="card stack">
+				<div class="product-card__cat">Équipements</div>
+				<h3 class="offer-title">Plaques QR code / NFC</h3>
+				<p class="muted mb-6 card-text-15">PETG 8 × 8 cm, QR code seul ou QR code + NFC anti-métal, à vos couleurs. Tarif dégressif selon le volume.</p>
+				<div class="offer-price-row">
+					<span class="offer-price">Sur devis</span>
+				</div>
+				<a class="btn btn--secondary btn--block mt-auto" href="<?php echo esc_url( panonfc_url( 'plaques' ) ); ?>">Voir les plaques</a>
+			</article>
+		</div>
+	</div>
+</section>
+
 <section class="section section--white">
 	<div class="container section__inner--tight section__inner">
 		<?php
 		if ( function_exists( 'get_field' ) && get_field( 'tarifs_atelier' ) ) {
 			echo '<div class="mb-13">';
-			panonfc_gallery_item( 'tarifs_atelier', 'Atelier et impression UV — production PANONFC' );
+			panonfc_gallery_item( 'tarifs_atelier', 'Atelier et impression UV — production PanoNFC' );
 			echo '</div>';
 		}
 		?>
@@ -113,7 +153,7 @@ get_header();
 					<li><span class="mk mk--success">✓</span>BAT et cycle de validation</li>
 					<li><span class="mk mk--success">✓</span>Puce NFC intégrée en production</li>
 					<li><span class="mk mk--success">✓</span>Impression UV sur Akylux 5 mm</li>
-					<li><span class="mk mk--success">✓</span>Compte et console de gestion, sans abonnement</li>
+					<li><span class="mk mk--success">✓</span>Compte et console de gestion standard, sans abonnement</li>
 				</ul>
 			</div>
 			<div>

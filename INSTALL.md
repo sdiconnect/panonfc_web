@@ -68,6 +68,45 @@ du thème (voir §5, pourquoi ça évite « le dossier existe déjà »).
 
 ---
 
+## 2 bis. Pages ajoutées en v1.2.0 — Habitat & copropriété, Compte Entreprise, SEO
+
+### Créer les pages (une fois)
+
+Pages → Ajouter, avec **exactement ce slug** (le thème retrouve les pages par leur slug) et le modèle indiqué :
+
+| Titre de la page | Slug | Modèle |
+|---|---|---|
+| Avis Résidents | `avis-residents` | `PANONFC — Avis Résidents` |
+| Bailleurs sociaux | `bailleurs-sociaux` | `PANONFC — Bailleurs sociaux` |
+| Syndics et copropriétés | `syndics-coproprietes` | `PANONFC — Syndics et copropriétés` |
+| Plaques QR code / NFC pour équipements | `plaques-qr-code-nfc-equipements` | `PANONFC — Plaques QR / NFC équipements` |
+| Compte Entreprise | `compte-entreprise` | `PANONFC — Compte Entreprise` |
+| *(facultatif)* Demander une démo | `demander-une-demo` | `PANONFC — Contact` |
+
+Le contenu des pages est dans le thème (versionné sur GitHub) : laisser le corps de page vide.
+Sans page `demander-une-demo`, les boutons « Demander une démo » mènent à la page Contact.
+
+### Menu
+
+Si un menu est assigné à « Menu principal », y ajouter **Bailleurs & syndics** (page Bailleurs sociaux) et
+**Compte Entreprise**. Sans menu assigné, le menu par défaut du thème les contient déjà.
+
+### SEO intégré au thème
+
+- Titre, meta description, Open Graph et données structurées (Organisation, Page, FAQ) sont générés
+  pour l'accueil et chaque gabarit (`inc/seo.php`, textes modifiables dans `panonfc_seo_defaults()`).
+- Par page, sans extension : champs personnalisés `_panonfc_seo_title` et `_panonfc_seo_desc`.
+- Si Yoast, Rank Math ou SEOPress est activé, le thème **se retire automatiquement** (aucun doublon).
+- Les questions/réponses des pages (FAQ) et le balisage FAQ viennent de la même source (`inc/content.php`).
+
+### Après mise à jour
+
+1. Réglages → Permaliens → **Enregistrer** (rafraîchit les URL).
+2. Vider le cache (WP Rocket / Cloudflare) pour l'accueil, Tarifs et les nouvelles pages.
+3. Search Console : soumettre `https://panonfc.com/wp-sitemap.xml` et demander l'indexation des nouvelles pages.
+
+---
+
 ## 3. Contenus éditoriaux (photos) — ACF facultatif
 
 Le thème s'affiche **complet dès l'activation** (textes et visuels de la

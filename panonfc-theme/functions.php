@@ -28,6 +28,8 @@ require_once PANONFC_DIR . '/inc/enqueue.php';
 require_once PANONFC_DIR . '/inc/template-tags.php';
 require_once PANONFC_DIR . '/inc/menus.php';
 require_once PANONFC_DIR . '/inc/contact-form.php';
+require_once PANONFC_DIR . '/inc/content.php';
+require_once PANONFC_DIR . '/inc/seo.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require_once PANONFC_DIR . '/inc/woocommerce.php';

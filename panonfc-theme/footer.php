@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="site-footer__grid">
 			<div class="site-footer__brand">
 				<img src="<?php echo esc_url( panonfc_asset( 'assets/img/panonfc-square.svg' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
-				<p class="site-footer__pitch"><?php echo esc_html( apply_filters( 'panonfc_footer_pitch', 'Panneaux immobiliers et de chantier connectés. Fabrication Akylux 5 mm, impression UV, identifiant unique et console de gestion incluse.' ) ); ?></p>
+				<p class="site-footer__pitch"><?php echo esc_html( apply_filters( 'panonfc_footer_pitch', 'Panneaux et plaques connectés QR code / NFC, à identifiant unique, et plateforme de suivi : immobilier, chantier, réseaux d’agences, bailleurs et copropriétés.' ) ); ?></p>
 			</div>
 
 			<div class="site-footer__col">

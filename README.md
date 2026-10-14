@@ -11,9 +11,12 @@ maquette Elementor.
 ## Ce que contient le thème
 
 - **Thème classique PHP**, sans page builder (Elementor retiré).
-- **7 gabarits** fidèles aux maquettes : Accueil, Immobilier, Chantier,
-  La solution (8 étapes), Tarifs, Contact / Devis, et la **fiche produit
-  WooCommerce** avec configurateur + carte de synthèse de prix.
+- **Gabarits** : Accueil, Immobilier, Chantier, La solution (8 étapes), Tarifs,
+  Contact / Devis, **fiche produit WooCommerce** avec configurateur, et depuis
+  la v1.2.0 : **Avis Résidents**, **Bailleurs sociaux**, **Syndics et
+  copropriétés**, **Plaques QR / NFC équipements**, **Compte Entreprise**.
+- **SEO intégré** (titres, meta, Open Graph, JSON-LD dont FAQ), qui s'efface si
+  Yoast / Rank Math / SEOPress est installé.
 - **WooCommerce** conservé comme tunnel d'achat ; balisage Schema.org produit
   préservé.
 - **Design system en CSS** : `assets/css/tokens.css` (variables + Poppins
