@@ -24,14 +24,19 @@ get_header();
 			);
 			?>
 		</div>
-		<div class="measure" style="max-width:760px">
+		<div class="split split--55-45">
+			<div>
 			<span class="eyebrow eyebrow--boxed"><span class="dot"></span>Ascenseurs · Portes · Équipements techniques</span>
 			<h1>Plaques QR code et NFC anti-métal pour vos équipements</h1>
-			<p class="page-hero__lead">Une plaque par équipement, un identifiant unique, un lien que vous pilotez. Conçue pour les parties communes et les surfaces métalliques, livrée à vos couleurs et prête à poser.</p>
+			<p class="page-hero__lead measure-sm">Une plaque par équipement, un identifiant unique, un lien que vous pilotez. Conçue pour les parties communes et les surfaces métalliques, livrée à vos couleurs et prête à poser.</p>
 			<div class="page-hero__cta">
 				<a class="btn btn--accent btn--lg" href="<?php echo esc_url( panonfc_url( 'devis' ) ); ?>">Demander un devis</a>
 				<a class="btn btn--on-navy btn--lg" href="#caracteristiques">Caractéristiques</a>
 			</div>
+		</div>
+			<figure class="hero__photo shadow-hero-el">
+				<?php panonfc_img( 'hab-plaque-studio', 'Plaque blanche avec QR code, identifiant unique à six caractères et pictogramme NFC', '', 1400, 788, false ); ?>
+			</figure>
 		</div>
 	</div>
 </section>
@@ -68,6 +73,20 @@ get_header();
 		</div>
 	</div>
 </section>
+
+<?php
+panonfc_photo_grid(
+	array(
+		'eyebrow' => 'En situation',
+		'title'   => 'Faites pour les parties communes',
+		'items'   => array(
+			array( 'key' => 'hab-cabine', 'alt' => "Plaque QR code et NFC près des boutons d'une cabine d'ascenseur en inox", 'caption' => "Sur l'inox d'une cabine d'ascenseur : la puce NFC anti-métal reste lisible." ),
+			array( 'key' => 'hab-garage', 'alt' => "Plaque QR code et NFC près du boîtier d'une porte de garage automatique", 'caption' => "Près du boîtier d'une porte de garage, en intérieur comme en extérieur." ),
+			array( 'key' => 'hab-lot-plaques', 'alt' => 'Douze plaques aux couleurs de quatre bailleurs, chacune avec son QR code et son identifiant', 'caption' => 'Livrées à vos couleurs, chaque plaque avec son identifiant unique.' ),
+		),
+	)
+);
+?>
 
 <section class="section section--surface">
 	<div class="container section__inner--internal section__inner">

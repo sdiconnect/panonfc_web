@@ -106,3 +106,79 @@ function panonfc_habitat_topbar() {
 		}
 	);
 }
+
+/**
+ * Image tag for an editorial image key, with intrinsic size (no layout shift).
+ *
+ * @param string $key   Key understood by panonfc_image().
+ * @param string $alt   Alternative text.
+ * @param string $class CSS class.
+ * @param int    $w     Intrinsic width.
+ * @param int    $h     Intrinsic height.
+ * @param bool   $lazy  Lazy-load (false for the hero image).
+ */
+function panonfc_img( $key, $alt, $class = '', $w = 1400, $h = 788, $lazy = true ) {
+	printf(
+		'<img src="%1$s" alt="%2$s" width="%3$d" height="%4$d"%5$s%6$s decoding="async">',
+		esc_url( panonfc_image( $key ) ),
+		esc_attr( $alt ),
+		(int) $w,
+		(int) $h,
+		$class ? ' class="' . esc_attr( $class ) . '"' : '',
+		$lazy ? ' loading="lazy"' : ' fetchpriority="high"'
+	);
+}
+
+/**
+ * Three-picture band: eyebrow, title, optional lead and captioned photos.
+ *
+ * @param array $args { eyebrow, title, lead, items: array of { key, alt, caption, w, h }, shots: bool, surface: bool }.
+ */
+function panonfc_photo_grid( $args ) {
+	$a = wp_parse_args( $args, array( 'eyebrow' => '', 'title' => '', 'lead' => '', 'items' => array(), 'shots' => false, 'surface' => false ) );
+	?>
+	<section class="section <?php echo $a['surface'] ? 'section--surface' : 'section--white'; ?>">
+		<div class="container section__inner--internal section__inner">
+			<div class="measure mb-11">
+				<?php if ( $a['eyebrow'] ) : ?><span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span><?php endif; ?>
+				<h2 class="h2--md"><?php echo esc_html( $a['title'] ); ?></h2>
+				<?php if ( $a['lead'] ) : ?><p class="muted mt-4 section-lead"><?php echo esc_html( $a['lead'] ); ?></p><?php endif; ?>
+			</div>
+			<div class="photo-grid<?php echo $a['shots'] ? ' photo-grid--shots' : ''; ?>">
+				<?php foreach ( $a['items'] as $it ) : ?>
+					<figure class="photo-grid__item">
+						<?php panonfc_img( $it['key'], $it['alt'], '', isset( $it['w'] ) ? $it['w'] : 1400, isset( $it['h'] ) ? $it['h'] : 788 ); ?>
+						<?php if ( ! empty( $it['caption'] ) ) : ?><figcaption><?php echo esc_html( $it['caption'] ); ?></figcaption><?php endif; ?>
+					</figure>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+	<?php
+}
+
+/**
+ * Navy band with a text column and one framed capture of the platform.
+ *
+ * @param array $args { eyebrow, title, lead, key, alt, w, h, link_label, link_url }.
+ */
+function panonfc_capture_band( $args ) {
+	$a = wp_parse_args( $args, array( 'eyebrow' => '', 'title' => '', 'lead' => '', 'key' => '', 'alt' => '', 'w' => 1150, 'h' => 640, 'link_label' => '', 'link_url' => '' ) );
+	?>
+	<section class="section section--navy-deep">
+		<div class="container section__inner">
+			<div class="split split--40-60">
+				<div>
+					<?php if ( $a['eyebrow'] ) : ?><span class="eyebrow eyebrow--on-navy"><?php echo esc_html( $a['eyebrow'] ); ?></span><?php endif; ?>
+					<h2 class="h2--md"><?php echo esc_html( $a['title'] ); ?></h2>
+					<?php if ( $a['lead'] ) : ?><p class="on-navy-dim mt-5 mb-7 section-lead"><?php echo esc_html( $a['lead'] ); ?></p><?php endif; ?>
+					<?php if ( $a['link_url'] ) : ?><a class="arrow-link" href="<?php echo esc_url( $a['link_url'] ); ?>"><?php echo esc_html( $a['link_label'] ); ?> →</a><?php endif; ?>
+				</div>
+				<figure class="console-band__media capture-frame">
+					<?php panonfc_img( $a['key'], $a['alt'], '', $a['w'], $a['h'] ); ?>
+				</figure>
+			</div>
+		</div>
+	</section>
+	<?php
+}

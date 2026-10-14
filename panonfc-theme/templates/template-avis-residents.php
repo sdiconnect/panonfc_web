@@ -36,7 +36,11 @@ get_header();
 					<a class="btn btn--on-navy btn--lg" href="#fonctionnement">Voir le fonctionnement</a>
 				</div>
 			</div>
-			<div class="floatcard floatcard--static" aria-hidden="true">
+			<div class="hero__media">
+				<figure class="hero__photo">
+					<?php panonfc_img( 'hab-scan', 'Une résidente approche son téléphone d\'une plaque QR code et NFC près d\'un ascenseur', '', 1400, 788, false ); ?>
+				</figure>
+				<div class="floatcard" aria-hidden="true">
 				<div class="floatcard__head">
 					<span class="floatcard__ref">Ascenseur bât. A</span>
 					<span class="badge badge--warning">Avis à surveiller</span>
@@ -44,6 +48,7 @@ get_header();
 				<div class="floatcard__title">Résidence Les Sources</div>
 				<div class="floatcard__meta">Note moyenne 90 jours : 3,4 / 5 · 128 avis · 2 avis négatifs cette semaine</div>
 				<div class="floatcard__foot">Alerte envoyée à l'agence Marseille Nord</div>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -89,6 +94,22 @@ get_header();
 		</div>
 	</div>
 </section>
+
+<?php
+panonfc_photo_grid(
+	array(
+		'eyebrow' => 'Dans la plateforme',
+		'title'   => 'Ce que voit votre agence',
+		'lead'    => 'Captures réelles du compte de démonstration, sur des données fictives.',
+		'shots'   => true,
+		'items'   => array(
+			array( 'key' => 'bo-satisfaction', 'alt' => 'Indicateurs de satisfaction et évolution des avis', 'caption' => "Vue d'ensemble : avis reçus, note moyenne, avis négatifs, taux de réponse.", 'w' => 1150, 'h' => 594 ),
+			array( 'key' => 'bo-surveillance', 'alt' => 'Équipements à surveiller et derniers avis négatifs', 'caption' => 'Équipements à surveiller et derniers commentaires des résidents.', 'w' => 1150, 'h' => 632 ),
+			array( 'key' => 'bo-residences', 'alt' => 'Liste des résidences avec leurs équipements, notes et avis', 'caption' => 'Le parc par résidence : équipements, notes sur 90 jours, avis négatifs.', 'w' => 1152, 'h' => 940 ),
+		),
+	)
+);
+?>
 
 <section class="section section--white">
 	<div class="container section__inner--internal section__inner">

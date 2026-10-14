@@ -33,7 +33,11 @@ get_header();
 					<a class="btn btn--on-navy btn--lg" href="#offre">Voir l'offre</a>
 				</div>
 			</div>
-			<div class="floatcard floatcard--static" aria-hidden="true">
+			<div class="hero__media">
+				<figure class="hero__photo">
+					<?php panonfc_img( 'hab-tableau-bord', 'Une responsable d\'agence consulte un tableau de bord sur son ordinateur', '', 1400, 788, false ); ?>
+				</figure>
+				<div class="floatcard" aria-hidden="true">
 				<div class="floatcard__head">
 					<span class="floatcard__ref">Réseau · 12 agences</span>
 					<span class="badge badge--success">Actif</span>
@@ -41,6 +45,7 @@ get_header();
 				<div class="floatcard__title">Scans du mois, par agence</div>
 				<div class="floatcard__meta">QR code et NFC · comparaison avec le mois précédent · panneaux sans scan signalés</div>
 				<div class="floatcard__foot">Rapport mensuel envoyé à la direction</div>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -55,6 +60,20 @@ get_header();
 		</div>
 	</div>
 </section>
+
+<?php
+panonfc_capture_band(
+	array(
+		'eyebrow' => 'Statistiques',
+		'title'   => 'Les scans de tout le réseau, agence par agence',
+		'lead'    => 'Scans QR code et NFC, évolution quotidienne, panneaux muets : la direction compare, chaque agence suit les siens. Capture réelle du compte de démonstration, données fictives.',
+		'key'     => 'bo-scans-qr-nfc',
+		'alt'     => 'Statistiques des scans QR code et NFC et évolution quotidienne',
+		'w'       => 1150,
+		'h'       => 741,
+	)
+);
+?>
 
 <section class="section section--surface" id="offre">
 	<div class="container section__inner--internal section__inner">

@@ -51,6 +51,17 @@ function panonfc_image( $key, $fallback = '' ) {
 		'pdp-thumb-3'      => 'https://panonfc.com/wp-content/uploads/2026/04/qr-scan-maison.webp',
 	);
 
+	// Habitat & copropriété visuals shipped with the theme (v1.2.1), WebP 1400 px.
+	// Photos: synthetic scenes; plaques bearing a bailleur logo are used with
+	// that bailleur's agreement (Dijon Habitat, Orvitis, Chaumont Habitat, Hamaris).
+	// Captures (bo-*): real screens of the demo account, fictitious data.
+	foreach ( array( 'scan', 'ascenseur', 'garage', 'pose', 'hall', 'facade', 'plaque-studio', 'lot-plaques', 'cabine', 'merci', 'tableau-bord' ) as $name ) {
+		$map[ 'hab-' . $name ] = panonfc_asset( 'assets/img/habitat/' . $name . '.webp' );
+	}
+	foreach ( array( 'satisfaction', 'surveillance', 'comparaison-agences', 'residences', 'agences', 'scans-qr-nfc' ) as $name ) {
+		$map[ 'bo-' . $name ] = panonfc_asset( 'assets/img/habitat/bo-' . $name . '.webp' );
+	}
+
 	$url = isset( $map[ $key ] ) ? $map[ $key ] : $fallback;
 
 	/**
