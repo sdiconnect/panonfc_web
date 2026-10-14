@@ -24,14 +24,19 @@ get_header();
 			);
 			?>
 		</div>
-		<div class="measure" style="max-width:760px">
+		<div class="split split--55-45">
+			<div>
 			<span class="eyebrow eyebrow--boxed"><span class="dot"></span>Bailleurs sociaux · ESH · OPH</span>
 			<h1>Mesurez la satisfaction de vos locataires là où elle se joue</h1>
-			<p class="page-hero__lead">Ascenseurs, portes de garage, halls : la qualité de service se juge sur les équipements du quotidien. PanoNFC équipe chacun d'une plaque QR code et NFC et vous donne, agence par agence, une mesure continue de ce que vivent vos locataires.</p>
+			<p class="page-hero__lead measure-sm">Ascenseurs, portes de garage, halls : la qualité de service se juge sur les équipements du quotidien. PanoNFC équipe chacun d'une plaque QR code et NFC et vous donne, agence par agence, une mesure continue de ce que vivent vos locataires.</p>
 			<div class="page-hero__cta">
 				<a class="btn btn--accent btn--lg" href="<?php echo esc_url( panonfc_url( 'demo' ) ); ?>">Demander une démo</a>
 				<a class="btn btn--on-navy btn--lg" href="<?php echo esc_url( panonfc_url( 'avis' ) ); ?>">Découvrir Avis Résidents</a>
 			</div>
+		</div>
+			<figure class="hero__photo shadow-hero-el">
+				<?php panonfc_img( 'hab-ascenseur', 'Plaque QR code et NFC posée sur l\'encadrement d\'un ascenseur, dans un palier de résidence', '', 1400, 788, false ); ?>
+			</figure>
 		</div>
 	</div>
 </section>
@@ -76,6 +81,34 @@ get_header();
 		</div>
 	</div>
 </section>
+
+<?php
+panonfc_photo_grid(
+	array(
+		'eyebrow' => 'Sur le terrain',
+		'title'   => 'Une plaque par équipement, posée par vos équipes',
+		'items'   => array(
+			array( 'key' => 'hab-garage', 'alt' => "Plaque QR code et NFC près du boîtier d'une porte de garage automatique", 'caption' => 'Portes de garage : plaque anti-métal posée près du boîtier de commande.' ),
+			array( 'key' => 'hab-hall', 'alt' => "Plaque QR code et NFC près de la porte d'un hall avec boîtes aux lettres", 'caption' => "Halls d'entrée : un retour sur la propreté et l'entretien des parties communes." ),
+			array( 'key' => 'hab-pose', 'alt' => "Un technicien pose une plaque QR code et NFC sur l'encadrement d'un ascenseur", 'caption' => 'Pose : une plaque collée, associée à son équipement en quelques secondes.' ),
+		),
+	)
+);
+
+panonfc_capture_band(
+	array(
+		'eyebrow'    => 'Pilotage',
+		'title'      => 'Comparez vos agences et vos résidences',
+		'lead'       => 'Avis, notes et retours négatifs par agence ; les résidences les moins bien notées remontent en premier. Captures réelles du compte de démonstration, données fictives.',
+		'key'        => 'bo-comparaison-agences',
+		'alt'        => 'Tableaux comparatifs des avis par agence et des résidences les moins bien notées',
+		'w'          => 1150,
+		'h'          => 667,
+		'link_label' => 'Découvrir Avis Résidents',
+		'link_url'   => panonfc_url( 'avis' ),
+	)
+);
+?>
 
 <section class="section section--white">
 	<div class="container section__inner--internal section__inner">

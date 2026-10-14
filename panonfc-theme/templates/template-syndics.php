@@ -22,14 +22,19 @@ get_header();
 			);
 			?>
 		</div>
-		<div class="measure" style="max-width:760px">
+		<div class="split split--55-45">
+			<div>
 			<span class="eyebrow eyebrow--boxed"><span class="dot"></span>Syndics · Gestionnaires · Conseils syndicaux</span>
 			<h1>Un QR code par équipement de la copropriété</h1>
-			<p class="page-hero__lead">Ascenseur, porte de parking, hall d'entrée : les occupants signalent ce qui ne va pas et donnent leur avis en un scan. Le gestionnaire est prévenu, l'historique reste attaché à l'équipement.</p>
+			<p class="page-hero__lead measure-sm">Ascenseur, porte de parking, hall d'entrée : les occupants signalent ce qui ne va pas et donnent leur avis en un scan. Le gestionnaire est prévenu, l'historique reste attaché à l'équipement.</p>
 			<div class="page-hero__cta">
 				<a class="btn btn--accent btn--lg" href="<?php echo esc_url( panonfc_url( 'demo' ) ); ?>">Demander une démo</a>
 				<a class="btn btn--on-navy btn--lg" href="<?php echo esc_url( panonfc_url( 'plaques' ) ); ?>">Voir les plaques</a>
 			</div>
+		</div>
+			<figure class="hero__photo shadow-hero-el">
+				<?php panonfc_img( 'hab-facade', 'Façade d\'une résidence collective aux balcons gris, sous un ciel bleu', '', 1400, 788, false ); ?>
+			</figure>
 		</div>
 	</div>
 </section>
@@ -62,6 +67,20 @@ get_header();
 		</div>
 	</div>
 </section>
+
+<?php
+panonfc_capture_band(
+	array(
+		'eyebrow' => 'Portefeuille',
+		'title'   => 'Chaque immeuble, chaque équipement, son historique',
+		'lead'    => "Les immeubles et leurs équipements sont regroupés dans un même espace : notes, signalements et dates restent attachés à l'équipement. Capture réelle du compte de démonstration, données fictives.",
+		'key'     => 'bo-residences',
+		'alt'     => 'Liste des immeubles avec leurs équipements, notes et avis',
+		'w'       => 1152,
+		'h'       => 940,
+	)
+);
+?>
 
 <?php
 panonfc_faq_section( 'syndics', 'Les questions des syndics' );
