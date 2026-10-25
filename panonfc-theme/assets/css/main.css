@@ -1180,3 +1180,7 @@ a.contact-mini__item:hover { border-color: var(--navy-300); box-shadow: var(--sh
   .topbar__right { gap: 16px; }
 }
 html { overflow-x: clip; }
+
+/* v1.2.2 — Cloudflare Turnstile (visible seulement si une vérification est nécessaire) */
+.form-turnstile { margin-bottom: 16px; }
+.form-turnstile:empty { margin: 0; }

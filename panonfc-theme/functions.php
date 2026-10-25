@@ -28,6 +28,7 @@ require_once PANONFC_DIR . '/inc/enqueue.php';
 require_once PANONFC_DIR . '/inc/template-tags.php';
 require_once PANONFC_DIR . '/inc/menus.php';
 require_once PANONFC_DIR . '/inc/contact-form.php';
+require_once PANONFC_DIR . '/inc/turnstile.php';
 require_once PANONFC_DIR . '/inc/content.php';
 require_once PANONFC_DIR . '/inc/seo.php';
 
