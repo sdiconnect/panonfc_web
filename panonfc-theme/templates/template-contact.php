@@ -109,7 +109,7 @@ $notice = panonfc_form_notice();
 
 					<div class="form-upload">
 						<div class="t">Éléments graphiques (facultatif)</div>
-						<p>Logo, charte ou photo d'un panneau existant — cela nous permet de joindre une maquette au devis. Envoyez-les en réponse à notre accusé de réception. Formats acceptés : AI, PDF, EPS, PNG, JPG.</p>
+						<p>Logo, charte ou photo d'un panneau existant — cela nous permet de joindre une maquette au devis. Vous pourrez nous les envoyer en réponse à notre premier e-mail. Formats acceptés : AI, PDF, EPS, PNG, JPG.</p>
 					</div>
 
 					<div class="form-consent">

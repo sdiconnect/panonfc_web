@@ -99,6 +99,78 @@ function panonfc_is_bot() {
 }
 
 /* ============================================================
+   Anti-abuse: content filter + rate limit
+   ------------------------------------------------------------
+   Octobre 2026 : des robots soumettaient le formulaire en masse avec
+   l'adresse e-mail d'un tiers et un lien dans le champ « Nom », pour que
+   le site envoie l'accusé de réception (avec leur lien) à ce tiers.
+   L'accusé de réception automatique a été supprimé ; les soumissions
+   suspectes ou trop nombreuses reçoivent un faux succès, sans e-mail.
+   ============================================================ */
+
+/**
+ * Whether the submitted fields look like spam.
+ *
+ * @param array $fields Sanitized fields.
+ * @return bool
+ */
+function panonfc_form_is_spam( $fields ) {
+	$url_re = '~(https?:|www\.|://|\.(com|net|org|ru|cn|xyz|top|info|biz|vn|io)\b)~i';
+
+	// Short identity fields must never contain a link.
+	foreach ( array( 'nom', 'societe', 'tel' ) as $key ) {
+		if ( ! empty( $fields[ $key ] ) && preg_match( $url_re, $fields[ $key ] ) ) {
+			return true;
+		}
+	}
+	if ( isset( $fields['nom'] ) && mb_strlen( $fields['nom'] ) > 80 ) {
+		return true;
+	}
+	// A real request rarely carries more than two links.
+	if ( ! empty( $fields['message'] ) && preg_match_all( '~(https?://|www\.)~i', $fields['message'] ) > 2 ) {
+		return true;
+	}
+
+	return (bool) apply_filters( 'panonfc_form_is_spam', false, $fields );
+}
+
+/**
+ * Count a submission and say whether it is within the limits
+ * (per IP: 3 per 15 min and 10 per day; whole site: 30 per hour).
+ *
+ * @return bool True if the submission may send mail.
+ */
+function panonfc_form_rate_ok() {
+	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	$key = substr( hash_hmac( 'sha256', $ip, wp_salt( 'nonce' ) ), 0, 20 );
+
+	$limits = apply_filters(
+		'panonfc_form_rate_limits',
+		array(
+			'pf_ip15_' . $key => array( 3, 15 * MINUTE_IN_SECONDS ),
+			'pf_ipd_' . $key  => array( 10, DAY_IN_SECONDS ),
+			'pf_site_h'       => array( 30, HOUR_IN_SECONDS ),
+		)
+	);
+
+	$ok = true;
+	foreach ( $limits as $name => $limit ) {
+		list( $max, $ttl ) = $limit;
+		$data = get_transient( $name );
+		if ( ! is_array( $data ) || empty( $data['exp'] ) || $data['exp'] < time() ) {
+			$data = array( 'n' => 0, 'exp' => time() + $ttl );
+		}
+		++$data['n'];
+		set_transient( $name, $data, max( 1, $data['exp'] - time() ) );
+		if ( $data['n'] > $max ) {
+			$ok = false;
+		}
+	}
+
+	return $ok;
+}
+
+/* ============================================================
    Fresh tokens via REST (so cached form pages still submit)
    ============================================================ */
 
@@ -227,6 +299,12 @@ function panonfc_process_contact( &$state ) {
 		return;
 	}
 
+	// Spam or flood: fake success, no mail (bots get no signal).
+	if ( panonfc_form_is_spam( $fields ) || ! panonfc_form_rate_ok() ) {
+		do_action( 'panonfc_form_rejected', $fields );
+		panonfc_form_finish( 'ok' );
+	}
+
 	panonfc_form_finish(
 		'ok',
 		function () use ( $fields ) {
@@ -245,14 +323,6 @@ function panonfc_process_contact( &$state ) {
 			);
 			$sent = wp_mail( $to, $subject, $body, $headers );
 			do_action( 'panonfc_contact_submitted', $fields, $sent, 'contact' );
-			if ( $sent ) {
-				wp_mail(
-					$fields['email'],
-					__( 'Votre message a bien été reçu — PanoNFC', 'panonfc' ),
-					sprintf( "Bonjour %s,\n\nMerci de votre message, nous vous répondons rapidement.\n\nL'équipe PanoNFC\n%s", $fields['nom'], home_url( '/' ) ),
-					array( 'Content-Type: text/plain; charset=UTF-8' )
-				);
-			}
 		}
 	);
 }
@@ -294,6 +364,12 @@ function panonfc_process_devis( &$state ) {
 		return;
 	}
 
+	// Spam or flood: fake success, no mail (bots get no signal).
+	if ( panonfc_form_is_spam( $fields ) || ! panonfc_form_rate_ok() ) {
+		do_action( 'panonfc_form_rejected', $fields );
+		panonfc_form_finish( 'ok' );
+	}
+
 	panonfc_form_finish(
 		'ok',
 		function () use ( $fields ) {
@@ -318,14 +394,6 @@ function panonfc_process_devis( &$state ) {
 			);
 			$sent = wp_mail( $to, $subject, $body, $headers );
 			do_action( 'panonfc_contact_submitted', $fields, $sent, 'devis' );
-			if ( $sent ) {
-				wp_mail(
-					$fields['email'],
-					__( 'Votre demande de devis PanoNFC', 'panonfc' ),
-					sprintf( "Bonjour %s,\n\nNous avons bien reçu votre demande et revenons vers vous sous 24 h ouvrées avec un chiffrage.\n\nL'équipe PanoNFC\n%s", $fields['nom'], home_url( '/' ) ),
-					array( 'Content-Type: text/plain; charset=UTF-8' )
-				);
-			}
 		}
 	);
 }
