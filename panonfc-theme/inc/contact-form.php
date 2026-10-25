@@ -65,6 +65,9 @@ function panonfc_antibot_render() {
 	echo '<input type="text" id="panonfc_website" name="panonfc_website" tabindex="-1" autocomplete="off">';
 	echo '</div>';
 	printf( '<input type="hidden" name="panonfc_t" value="%s">', esc_attr( panonfc_time_token() ) );
+	if ( function_exists( 'panonfc_turnstile_render' ) ) {
+		panonfc_turnstile_render();
+	}
 }
 
 /**
@@ -256,6 +259,14 @@ function panonfc_handle_form() {
 	// Anti-bot — redirect to a fake success (no mail) so bots get no signal.
 	if ( panonfc_is_bot() ) {
 		panonfc_form_finish( 'ok' );
+	}
+
+	// Cloudflare Turnstile (only when keys are configured).
+	$turnstile = function_exists( 'panonfc_turnstile_verify' ) ? panonfc_turnstile_verify() : true;
+	if ( true !== $turnstile ) {
+		$state['status']  = 'error';
+		$state['message'] = $turnstile;
+		return;
 	}
 
 	if ( 'contact' === $type ) {
